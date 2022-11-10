@@ -1,62 +1,26 @@
 #include "philo.h"
 
-static void	copy(char *num, int n, int i)
-{
-	if (n < 0)
-	{
-		num[0] = '-';
-		while (i > 0)
-		{
-			num[i] = '0' - n % 10;
-			n /= 10;
-			i--;
-		}
-	}
-	else
-	{
-		while (i > 0)
-		{
-			num[i - 1] = '0' + n % 10;
-			n /= 10;
-			i--;
-		}
-	}
-}
-
-static void	ft_putnbr_fd(int n, int fd)
-{
-	char	num[11];
-	int		count;
-
-	if (n == 0)
-		write (fd, "0", 1);
-	else
-	{
-		count = ft_intlen(n);
-		copy(num, n, count);
-		if (n < 0)
-			write (fd, num, count + 1);
-		else
-			write (fd, num, count);
-	}
-}
 
 static void	ft_putstr_fd(char *s, int fd)
 {
 	int	size;
 
 	size = 0;
-	while (s[size])
-		size++;
 	if (s == NULL)
 		return ;
+	while (s[size])
+		size++;
 	write (fd, s, size);
 }
 
-void	print_action(int philo, char *action, int time)
+void	print_action(t_info	*infos, int action_n, int time)
 {
-	ft_putnbr_fd (philo, 1);
-	ft_putstr_fd (action, 1);
-	ft_putnbr_fd (time, 1);
-	write (1, "\n", 1);
+	const char		action = {"has taken a fork", "is eating",
+		" is sleeping", "is thinking", "died"};
+	
+	char *print_string;
+
+	print_string = string_join(ft_itoa(time), ft_itoa(infos->philo_id), action[action_n]);
+	ft_putnbr_sp_fd (print_string, 1);
+	free(print_string)
 }

@@ -8,14 +8,27 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-
-typedef struct s_philo
+typedef enum e_bool
 {
-		int				philo_n;
-		pthread_mutex_t	fork;
-		pthread_t		philo;
+	YES,
+	NO,
+}	t_bool;
 
-}	t_philo;
+enum e_action
+{
+	FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DIED,
+};
+
+typedef struct s_time
+{
+	int	start;
+	int	last_eat;
+	int	corr_eat;
+}t_time;
 
 typedef struct s_info
 {	
@@ -24,18 +37,24 @@ typedef struct s_info
 	int				time_to_sleep;
 	int				n_times_eat;
 	int				n_philo;
-	t_philo			philo[200];
-	pthread_mutex_t	write_die;
+	int				philo_id;
+	t_bool			dead;
+	pthread_t		philo;
+	pthread_mutex_t	**fork;
+	pthread_mutex_t	*write_die;
 }	t_info;
 
-void	init_info(t_info *info, char **argv);
+int		init_info(t_info **info, char **argv, pthread_mutex_t **forks,
+pthread_mutex_t *write_die);
 int		ft_isdigit(int c);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_atoi(const char *str);
 int		right_input(int argc, char **argv);
 void	print_action(int philo, char *action, int time);
-void	thread_init(t_info *info);
-void	mutex_init(t_info *info);
+int		thread_init(t_info **info);
+int		mutex_init(int n_philo);
+void	routine_even(void *info);
+void	routine_odd(void *info);
 
 #endif

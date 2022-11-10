@@ -7,7 +7,12 @@ RM = rm -f
 NAME = fdf
 
 
-FILES = main.c 
+FILES = main.c \
+philo_rutine.c \
+print.c \
+utilitis.c \
+init.c \
+input_check.c 
 
 
 OBJ = ${FILES:%.c=%.o}
