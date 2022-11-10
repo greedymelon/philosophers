@@ -44,8 +44,8 @@ void	init_info(t_info **info, char **argv, pthread_mutex_t *write_die,
 	{
 		info[i]->n_philo = n_philo;
 		info[i]->time_to_die = ft_atoi(argv[2]);
-		info[i]->time_to_eat = ft_atoi(argv[3]);
-		info[i]->time_to_sleep = ft_atoi(argv[4]);
+		info[i]->time_to_eat = ft_atoi(argv[3]) * 1000;
+		info[i]->time_to_sleep = ft_atoi(argv[4]) * 1000;
 		info[i]->n_times_eat = ft_atoi(argv[5]);
 		info[i]->dead = NO;
 		info[i]->philo_id = i + 1;

@@ -33,8 +33,8 @@ typedef struct s_time
 typedef struct s_info
 {	
 	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	unsigned int	time_to_eat;
+	unsigned int	time_to_sleep;
 	int				n_times_eat;
 	int				n_philo;
 	int				philo_id;

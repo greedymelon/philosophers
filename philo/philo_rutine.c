@@ -28,7 +28,7 @@ int	dead_or_print(t_info *infos, int action, int times)
 int	eat_or_die(t_info *infos, t_time *times)
 {
 	times->corr_eat = time_msec();
-	if (infos->time_to_eat >= times->corr_eat - times->last_eat)
+	if (infos->time_to_die >= times->corr_eat - times->last_eat)
 	{	
 		if (dead_or_print(infos, EAT, times->corr_eat))
 			return (DEAD);
@@ -49,6 +49,7 @@ int	eat_or_die(t_info *infos, t_time *times)
 		pthread_mutex_lock(infos->write_die);
 		return (DEAD);
 	}
+	usleep(infos->time_to_eat);
 	return (ALIVE)
 }
 void	routine_even(void *info)
