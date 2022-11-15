@@ -3,23 +3,16 @@
 int main(int argc, char **argv)
 {
 	t_info	info[201];
-	pthread_mutex_t	write_die;
+	pthread_mutex_t	write;
+	pthread_mutex_t	dying;
 	pthread_mutex_t	forks[201];
 
 	if (!right_input(argc, argv))
 		return (1);
-	if (!pthread_mutex_init(&write_die, NULL));
+	init_philo_info(&info[0], argv);
+	if (!init_mutex(&info[0], &dying, &write, &forks[0]))
 		return (2);
-	if (!init_info(&info, argv, &write_die, &forks))
-	{	
-		pthread_mutex_destroy(&write_die);
-		return (3);
-	}
-	if (!thread_init(&info))
-	{
-		mutex_clean(&write_die, &forks);
-		return (4);
-	}
-	if (start_simulation(&info, &start))
-
+	start_simulation(&info[0]);
+	mutex_clean(&write, &dying, &forks[0], info[0].n_philo);
+	return (0);
 }

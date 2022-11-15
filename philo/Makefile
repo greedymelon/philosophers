@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 
 RM = rm -f
 
-NAME = fdf
+NAME = philo
 
 
 FILES = main.c \
@@ -12,7 +12,10 @@ philo_rutine.c \
 print.c \
 utilitis.c \
 init.c \
-input_check.c 
+input_check.c \
+simulation.c \
+philo_action.c \
+clean_up.c
 
 
 OBJ = ${FILES:%.c=%.o}

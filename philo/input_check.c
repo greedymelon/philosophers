@@ -17,11 +17,14 @@ int	right_input(int argc, char **argv)
 {
 	int	i;
 
-	if (argc < 6)
+	if (argc < 5 || argc > 6)
 		return (0);
 	i = 1;
-	while (i < 6)
-		if (!is_all_numb(argv[i++]))
+	while (i < argc)
+	{
+		if (!is_all_numb(argv[i]))
 			return (0);
+		i++;
+	}
 	return (1);
 }
