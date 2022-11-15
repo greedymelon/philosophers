@@ -45,10 +45,8 @@ typedef struct s_info
 	pthread_mutex_t	*write;
 }	t_info;
 
-int			init_info(t_info *info, char **argv, pthread_mutex_t *write_die,
-			pthread_mutex_t *forks);
 int			ft_isdigit(int c);
-int			ft_atol(const char *str);
+long int	ft_atol(const char *str);
 char		*ft_ltoa(int long n);
 size_t		ft_strlen(const char *s);
 int			right_input(int argc, char **argv);
@@ -68,5 +66,6 @@ int			eat_or_die(t_info *infos, t_time *times);
 int			sleep_or_die(t_info *infos, t_time *times);
 int			think_or_die(t_info *infos, t_time *times);
 long int	time_msec(void);
-void		print_dead(long int time, t_info	*infos);
+void		print_dead(long int time_start, long int time, t_info*infos);
+int			sleep_act(t_time *times, long int time, t_info *infos);
 #endif

@@ -22,28 +22,29 @@ int	calc_next(t_info *infos)
 void	*routine_even(void *info)
 {
 	t_info	*infos;
-	int		next_philo;
+	int		fork_right;
 	t_time	times;
 	int		status;
 
 	infos = info;
-	next_philo = calc_next(infos);
+	fork_right = calc_next(infos);
 	times.start = time_msec();
 	times.last_eat = times.start;
 	while (1)
 	{
-		pthread_mutex_lock(&(infos->fork)[next_philo]);
+		pthread_mutex_lock(&(infos->fork)[fork_right]);
 		if (fork_or_die(infos, &times) == DEAD)
 		{
-			pthread_mutex_unlock(&(infos->fork)[next_philo]);
+			pthread_mutex_unlock(&(infos->fork)[fork_right]);
 			return (NULL);
 		}
 		pthread_mutex_lock(&(infos->fork)[infos->philo_id - 1]);
 		status = eat_or_die(infos, &times);
-		pthread_mutex_unlock(&(infos->fork)[next_philo]);
+		pthread_mutex_unlock(&(infos->fork)[fork_right]);
 		pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
 		if (status == DEAD)
 			return (NULL);
+
 		if (sleep_or_die(infos, &times) == DEAD)
 			return (NULL);
 		if (think_or_die(infos, &times) == DEAD)
@@ -55,11 +56,11 @@ void	*routine_even(void *info)
 void	*routine_odd(void *info)
 {
 	t_info	*infos;
-	int		next_philo;
+	int		fork_right;
 	t_time	times;
 
 	infos = info;
-	next_philo = calc_next(infos);
+	fork_right = calc_next(infos);
 	times.start = time_msec();
 	times.last_eat = times.start;
 	while (1)
@@ -70,14 +71,14 @@ void	*routine_odd(void *info)
 			pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
 			return (NULL);
 		}
-		pthread_mutex_lock(&(infos->fork)[next_philo]);
+		pthread_mutex_lock(&(infos->fork)[fork_right]);
 		if (eat_or_die(infos, &times) == DEAD)
 		{
-			pthread_mutex_unlock(&(infos->fork)[next_philo]);
+			pthread_mutex_unlock(&(infos->fork)[fork_right]);
 			pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
 			return (NULL);
 		}
-		pthread_mutex_unlock(&(infos->fork)[next_philo]);
+		pthread_mutex_unlock(&(infos->fork)[fork_right]);
 		pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
 		if (sleep_or_die(infos, &times) == DEAD)
 			return (NULL);

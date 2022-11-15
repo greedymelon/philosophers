@@ -40,8 +40,9 @@ void	init_philo_info(t_info *info, char **argv)
 	{
 		info[i].n_philo = n_philo;
 		info[i].time_to_die = ft_atol(argv[2]);
-		info[i].time_to_eat = ft_atol(argv[3]) * 1000;
-		info[i].time_to_sleep = ft_atol(argv[4]) * 1000;
+		info[i].time_to_eat = ft_atol(argv[3]);
+		info[i].time_to_sleep = ft_atol(argv[4]);
+		info[i].schr_box = ALIVE;
 		if (argv[5])
 			info[i].n_times_eat = ft_atol(argv[5]);
 		else

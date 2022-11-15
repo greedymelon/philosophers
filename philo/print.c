@@ -31,6 +31,7 @@ static char	*st_strjoin3(char *s1, char *s2, const char *s3)
 	nws = (char *)malloc(nwssize * sizeof(char));
 	if (nws == NULL)
 		return (NULL);
+	nws[0] = '\0';
 	ft_strlcat(nws, s1, nwssize);
 	nws[s1_size] = ' ';
 	nws[s1_size + 1] = '\0';
@@ -66,29 +67,33 @@ int	print_action(t_info	*infos, int action_n, long int time)
 	pthread_mutex_lock(infos->dying);
 	if (infos->schr_box == DEAD)
 	{
-		free(print_str);
 		pthread_mutex_unlock(infos->dying);
+		free(print_str);
 		return (DEAD);
 	}
+	pthread_mutex_unlock(infos->dying);
 	ft_putstr_fd(print_str, 1);
 	free(print_str);
 	return (ALIVE);
 }
 
-void	print_dead(long int time, t_info	*infos)
+void	print_dead(long int time_start, long int time, t_info *infos)
 {
-	char	*print_str;
+	char		*print_str;
+	long int	now;
 
-	if (time_msec() - time > 10)
+	now = time_msec() - time_start;
+	if (now - time > 10)
 	{
 		pthread_mutex_lock(infos->write);
-		ft_putstr_fd("ERROR TIME", 2);
-		pthread_mutex_lock(infos->write);
+		ft_putstr_fd("ERROR TIME\n", 2);
+		ft_putstr_fd(ft_ltoa(now - time), 2);
+		pthread_mutex_unlock(infos->write);
 		return ;
 	}	
 	print_str = st_strjoin3(ft_ltoa(time), ft_ltoa(infos->philo_id), " Dead");
 	pthread_mutex_lock(infos->write);
 	ft_putstr_fd(print_str, 1);
-	pthread_mutex_lock(infos->write);
+	pthread_mutex_unlock(infos->write);
 	free(print_str);
 }

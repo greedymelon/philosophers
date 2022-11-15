@@ -20,7 +20,7 @@ static long int	putnum(const char *str, long int i)
 	return (num * i);
 }
 
-int	ft_atol(const char *str)
+long int	ft_atol(const char *str)
 {
 	int	i;
 
@@ -48,7 +48,7 @@ int	ft_isalnum(int c)
 }
 
 
-static char	*copy(char *num, int n, int i)
+static char	*copy(char *num, long int n, int i)
 {
 	if (n < 0)
 	{
@@ -66,7 +66,7 @@ static char	*copy(char *num, int n, int i)
 		num[i] = '\0';
 		while (i > 0)
 		{
-			num[i - 1] = '0' + n % 10;
+			num[i - 1] = '0' + (n % 10);
 			n /= 10;
 			i--;
 		}
@@ -79,7 +79,7 @@ static int	ft_longlen(long int n)
 	int	count;
 
 	count = 0;
-	if (!n)
+	if (n == 0)
 		return (1);
 	while (n)
 	{
@@ -92,19 +92,17 @@ static int	ft_longlen(long int n)
 char	*ft_ltoa(long int n)
 {
 	char	*num;
-	int		intlen;
+	int		longlen;
 
-	intlen = ft_longlen(n);
+	longlen = ft_longlen(n);
 	if (n < 0)
-		num = malloc((intlen + 2) * sizeof(char));
-	else if (n > 0)
-		num = malloc((intlen + 1) * sizeof(char));
+		num = malloc((longlen + 2) * sizeof(char));
 	else
-		num = malloc(2 * sizeof(char));
+		num = malloc((longlen + 1) * sizeof(char));
 	if (num == NULL)
 		return (NULL);
 	if (n != 0)
-		return (copy(num, n, intlen));
+		return (copy(num, n, longlen));
 	num[0] = '0';
 	num[1] = '\0';
 	return (num);
