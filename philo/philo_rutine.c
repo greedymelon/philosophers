@@ -24,7 +24,6 @@ void	*routine_even(void *info)
 	t_info	*infos;
 	int		fork_right;
 	t_time	times;
-	int		status;
 
 	infos = info;
 	fork_right = calc_next(infos);
@@ -33,22 +32,28 @@ void	*routine_even(void *info)
 	while (1)
 	{
 		pthread_mutex_lock(&(infos->fork)[fork_right]);
-		if (fork_or_die(infos, &times) == DEAD)
+		if (dead_or_print(infos, FORK, &times) == DEAD)
 		{
 			pthread_mutex_unlock(&(infos->fork)[fork_right]);
 			return (NULL);
 		}
 		pthread_mutex_lock(&(infos->fork)[infos->philo_id - 1]);
-		status = eat_or_die(infos, &times);
+		if (eat_or_die(infos, &times) == DEAD)
+		{
+			pthread_mutex_unlock(&(infos->fork)[fork_right]);
+			pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
+			return (NULL);
+		}
 		pthread_mutex_unlock(&(infos->fork)[fork_right]);
 		pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
-		if (status == DEAD)
-			return (NULL);
 
-		if (sleep_or_die(infos, &times) == DEAD)
+		if (dead_or_print(infos, SLEEP, &times) == DEAD)
 			return (NULL);
-		if (think_or_die(infos, &times) == DEAD)
+		if (sleep_act(&times, infos->time_to_sleep, infos) == DEAD)
 			return (NULL);
+		if (dead_or_print(infos, THINK, &times) == DEAD)
+			return (NULL);
+		usleep(0);
 	}
 	return (NULL);
 }
@@ -66,11 +71,13 @@ void	*routine_odd(void *info)
 	while (1)
 	{
 		pthread_mutex_lock(&(infos->fork)[infos->philo_id - 1]);
-		if (fork_or_die(infos, &times) == DEAD)
+		if (dead_or_print(infos, FORK, &times) == DEAD)
 		{
 			pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
 			return (NULL);
 		}
+		if (time_msec() - times.start - times.last_eat > infos->time_to_die / 2)
+			usleep(10);
 		pthread_mutex_lock(&(infos->fork)[fork_right]);
 		if (eat_or_die(infos, &times) == DEAD)
 		{
@@ -80,10 +87,13 @@ void	*routine_odd(void *info)
 		}
 		pthread_mutex_unlock(&(infos->fork)[fork_right]);
 		pthread_mutex_unlock(&(infos->fork)[infos->philo_id - 1]);
-		if (sleep_or_die(infos, &times) == DEAD)
+		if (dead_or_print(infos, SLEEP, &times) == DEAD)
 			return (NULL);
-		if (think_or_die(infos, &times) == DEAD)
+		if (sleep_act(&times, infos->time_to_sleep, infos) == DEAD)
 			return (NULL);
+		if (dead_or_print(infos, THINK, &times) == DEAD)
+			return (NULL);
+		usleep(0);
 	}
 	return (NULL);
 }

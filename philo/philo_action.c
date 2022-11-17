@@ -15,149 +15,71 @@ int	sleep_act(t_time *times, long int time, t_info *infos)
 			pthread_mutex_unlock(infos->dying);
 			return (DEAD);
 		}
-		
-		if (infos->time_to_die <= time_msec() - times->last_eat)
+		pthread_mutex_unlock(infos->dying);
+		if (infos->time_to_die <= time_msec() - times->start - times->last_eat)
 		{
-			infos->schr_box = DEAD;
-			print_dead(times->start, times->last_eat - times->start + infos->time_to_die, infos);
-			pthread_mutex_unlock(infos->dying);
+			print_action(infos, DYING, times);
 			return (DEAD);
 		}
-		pthread_mutex_unlock(infos->dying);
 	}
 	return (ALIVE);
 }
 
-int	dead_or_print(t_info *infos, int action, int times)
+int	dead_or_print(t_info *infos, int action, t_time *times)
 {
-	pthread_mutex_lock(infos->write);
-	if (print_action(infos, action, times))
-	{	
-		pthread_mutex_unlock(infos->write);
+	long int	time;
+
+	pthread_mutex_lock(infos->dying);
+	if (infos->schr_box == DEAD)
+	{
+		pthread_mutex_unlock(infos->dying);
 		return (DEAD);
 	}
-	pthread_mutex_unlock(infos->write);
-	return (ALIVE);
-}
-
-int	fork_or_die(t_info *infos, t_time *times)
-{
-	long int	fork_time;
-
-	fork_time = time_msec();
-	if (infos->time_to_die >= fork_time - times->last_eat)
+	pthread_mutex_unlock(infos->dying);
+	time = time_msec() - times->start;
+	if (infos->time_to_die > time - times->last_eat)
 	{	
-		if (dead_or_print(infos, FORK, fork_time - times->start))
-			return (DEAD);
+		print_action(infos, action, times);
+		if (action == EAT)
+			times->last_eat = time;
 	}
 	else
 	{
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		infos->schr_box = DEAD;
-		print_dead(times->start, times->last_eat - times->start + infos->time_to_die, infos);
-		pthread_mutex_unlock(infos->dying);
+		print_action(infos, DYING, times);
 		return (DEAD);
 	}
 	return (ALIVE);
 }
+
+// int	fork_or_die(t_info *infos, t_time *times)
+// {
+// 	if (dead_or_print(infos, FORK, times) == DEAD)
+// 		return (DEAD);
+// 	return (ALIVE);
+// }
 
 int	eat_or_die(t_info *infos, t_time *times)
 {
-	times->corr_eat = time_msec();
-	if (infos->time_to_die >= times->corr_eat - times->last_eat)
-	{	
-		if (dead_or_print(infos, EAT, times->corr_eat - times->start))
-			return (DEAD);
-		times->last_eat = times->corr_eat;
-	}
-	else
-	{
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		infos->schr_box = DEAD;
-		print_dead(times->start, times->last_eat - times->start + infos->time_to_die, infos);
-		pthread_mutex_unlock(infos->dying);
+	int n_eat;
+
+	if (dead_or_print(infos, EAT, times) == DEAD)
 		return (DEAD);
-	}
-	pthread_mutex_lock(infos->dying);
-	infos->n_times_eat--;
-	pthread_mutex_unlock(infos->dying);
-	if (!infos->n_times_eat)
-	{	
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		pthread_mutex_unlock(infos->dying);
-		return (DEAD);
-	}
 	if (sleep_act(times, infos->time_to_eat, infos) == DEAD)
 		return (DEAD);
-	return (ALIVE);
-}
-
-int	sleep_or_die(t_info *infos, t_time *times)
-{
-	long int	sleep_time;
-
-	sleep_time = time_msec();
-	if (infos->time_to_die >= sleep_time - times->last_eat)
-	{	
-		if (dead_or_print(infos, SLEEP, sleep_time - times->start))
-			return (DEAD);
-	}
-	else
-	{
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		infos->schr_box = DEAD;
-		print_dead(times->start, times->last_eat - times->start + infos->time_to_die, infos);
-		pthread_mutex_unlock(infos->dying);
-		return (DEAD);
-	}
-	if(sleep_act(times, infos->time_to_sleep, infos) == DEAD)
+	pthread_mutex_lock(infos->dying);
+	infos->n_times_eat--;
+	n_eat = infos->n_times_eat;
+	pthread_mutex_unlock(infos->dying);
+	if (n_eat == 0)
 		return (DEAD);
 	return (ALIVE);
 }
 
-int	think_or_die(t_info *infos, t_time *times)
-{
-	long int	think_time;
-
-	think_time = time_msec();
-	times->corr_eat = time_msec();
-	if (infos->time_to_die >= think_time - times->last_eat)
-	{	
-		if (dead_or_print(infos, THINK, think_time - times->start))
-			return (DEAD);
-	}
-	else
-	{
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		infos->schr_box = DEAD;
-		print_dead(times->start, times->last_eat - times->start + infos->time_to_die, infos);
-		pthread_mutex_unlock(infos->dying);
-		return (DEAD);
-	}
-	return (ALIVE);
-}
+//int	sleep_or_die(t_info *infos, t_time *times)
+// {
+// 	if (dead_or_print(infos, SLEEP, times) == DEAD)
+// 		return (DEAD);
+// 	if(sleep_act(times, infos->time_to_sleep, infos) == DEAD)
+// 		return (DEAD);
+// 	return (ALIVE);
+// }
