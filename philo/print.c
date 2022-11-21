@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:04:12 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:04:14 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/21 18:19:20 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,16 @@ static t_bool	st_print_error(t_info *infos)
 	return (DEAD);
 }
 
-t_bool	print_action(t_info *infos, int action_n, t_time *times)
+t_bool	print_action(t_info *infos, int action_n, long int eat)
 {
 	const char	action[5][18] = {" has taken a fork", " is eating",
-		" is sleeping", " is thinking", " dead"};
+		" is sleeping", " is thinking", " died"};
 	char		*print_string;
 
 	pthread_mutex_lock(infos->write);
-	if (action_n == DEAD && time_msec() - times->start - times->last_eat
+	if (action_n == DEAD && time_msec() - infos->start - eat
 		> infos->time_to_die + 10)
 		return (st_print_error(infos));
-	print_string = st_strjoin3(ft_ltoa(time_msec() - times->start),
-			ft_ltoa(infos->philo_id), action[action_n]);
 	pthread_mutex_lock(infos->dying);
 	if (infos->schr_box == DEAD)
 	{
@@ -103,10 +101,19 @@ t_bool	print_action(t_info *infos, int action_n, t_time *times)
 		pthread_mutex_unlock(infos->write);
 		return (DEAD);
 	}
-	if (action_n == DYING)
-		infos->schr_box = DEAD;
-	pthread_mutex_unlock(infos->dying);
+	print_string = st_strjoin3(ft_ltoa(time_msec() - infos->start),
+			ft_ltoa(infos->philo_id), action[action_n]);
 	ft_putstr_fd(print_string, 1);
+	if (action_n == DYING)
+	{	
+		infos->schr_box = DEAD;
+		pthread_mutex_unlock(infos->dying);
+		usleep(1000000);
+		pthread_mutex_unlock(infos->write);
+		free (print_string);
+		return (DEAD);
+	}
+	pthread_mutex_unlock(infos->dying);
 	pthread_mutex_unlock(infos->write);
 	free (print_string);
 	return (ALIVE);

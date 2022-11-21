@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:02:47 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:02:49 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/21 18:57:17 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	*one_philo(void *info)
 {
-	t_info	*infos;
-	t_time	times;
+	t_info		*infos;
+	long int	eat;
 
 	infos = info;
-	times.start = time_msec();
-	times.last_eat = times.start;
+	infos->start = time_msec();
+	eat = infos->start;
 	pthread_mutex_lock(&(infos->fork)[0]);
-	dead_or_print(infos, FORK, &times);
-	sleep_act(&times, infos->time_to_die - (time_msec() - times.start), infos);
-	dead_or_print(infos, DYING, &times);
+	dead_or_print(infos, FORK, eat);
+	sleep_act(eat, infos->time_to_die - (time_msec() - infos->start), infos);
+	dead_or_print(infos, DYING, eat);
 	pthread_mutex_unlock(&(infos->fork)[0]);
 	return (NULL);
 }

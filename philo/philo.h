@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:03:51 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:03:53 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/21 18:53:22 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,11 @@ enum e_action
 	DYING,
 };
 
-typedef struct s_time
-{
-	long int	start;
-	long int	last_eat;
-	long int	corr_eat;
-}t_time;
+// typedef struct s_time
+// {
+// 	long int	start;
+// 	long int	last_eat;
+// }t_time;
 
 typedef struct s_info
 {	
@@ -46,7 +45,8 @@ typedef struct s_info
 	int				n_philo;
 	int				philo_id;
 	int				schr_box;
-	int				therad_fail;
+	long int		start;
+	int				theard_fail;
 	pthread_t		philo;
 	pthread_mutex_t	*dying;
 	pthread_mutex_t	*fork;
@@ -64,17 +64,18 @@ int			init_mutex(t_info *info, pthread_mutex_t *dying,
 /* input_check.c */
 int			right_input(int argc, char **argv);
 /* philo_action.c */
-t_bool		sleep_act(t_time *times, long int time, t_info *infos);
+t_bool		sleep_act(long int eat, long int time, t_info *infos);
 void		*unlock_fork(t_info *infos, int fork_fir, int fork_sec);
-t_bool		dead_or_print(t_info *infos, int action, t_time *times);
-t_bool		fork_or_die(t_info *infos, t_time *times, int fork_fir,
+t_bool		dead_or_print(t_info *infos, int action, long int eat);
+t_bool		fork_or_die(t_info *infos, long int eat, int fork_fir,
 				int fork_sec);
-t_bool		eat_or_die(t_info *infos, t_time *times);
+t_bool		eat_or_die(t_info *infos, long int *eat);
 /* philo_routine.c */
+int			thread_fail(t_info *infos);
 void		*routine_even(void *info);
 void		*routine_odd(void *info);
 /* print.c */
-t_bool		print_action(t_info *info, int action, t_time *times);
+t_bool		print_action(t_info *info, int action, long int eat);
 /* simulation.c */
 void		start_simulation(t_info *info);
 /* time.c */

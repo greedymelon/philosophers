@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:01:51 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:01:53 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/21 18:31:55 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	init_philo_info(t_info *info, char **argv)
 		else
 			info[i].n_times_eat = -1;
 		info[i].philo_id = i + 1;
+		info[i].theard_fail = 0;
 		i++;
 	}
 }
