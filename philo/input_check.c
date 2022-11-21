@@ -1,14 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   input_check.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/21 16:02:09 by dmonfrin      #+#    #+#                 */
+/*   Updated: 2022/11/21 16:02:19 by dmonfrin      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+
+static int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
 
 static int	is_all_numb(char *str)
 {
 	int	i;
-	
+
 	i = 0;
 	if (!str[i])
 		return (0);
-	while(str[i])
-		if(!ft_isdigit(str[i++]))
+	while (str[i])
+		if (!ft_isdigit(str[i++]))
 			return (0);
 	return (1);
 }

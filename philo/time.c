@@ -1,40 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   clean_up.c                                         :+:    :+:            */
+/*   time.c                                             :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/11/21 16:01:33 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:01:36 by dmonfrin      ########   odam.nl         */
+/*   Created: 2022/11/21 16:04:42 by dmonfrin      #+#    #+#                 */
+/*   Updated: 2022/11/21 16:04:44 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include <sys/time.h>
 
-void	mutex_clean(pthread_mutex_t *m1, pthread_mutex_t *m2,
-	pthread_mutex_t *m3, int num)
+static long int	st_tv_msec(struct timeval *tv)
 {
-	int	i;
-
-	i = 0;
-	pthread_mutex_destroy(m1);
-	pthread_mutex_destroy(m2);
-	while (i < num)
-	{
-		pthread_mutex_destroy(&m3[i]);
-		i++;
-	}
+	return (tv->tv_sec * 1000 + tv->tv_usec / 1000);
 }
 
-void	clean_fork(pthread_mutex_t *forks, int num)
+long int	time_msec(void)
 {
-	int	i;
+	struct timeval	tv;
 
-	i = 0;
-	while (i < num)
-	{
-		pthread_mutex_destroy(&forks[i]);
-		i++;
-	}
+	gettimeofday(&tv, NULL);
+	return (st_tv_msec(&tv));
 }

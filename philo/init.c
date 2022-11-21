@@ -1,15 +1,49 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   init.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/21 16:01:51 by dmonfrin      #+#    #+#                 */
+/*   Updated: 2022/11/21 16:01:53 by dmonfrin      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static void	st_clean_fork(pthread_mutex_t *forks, int num)
+static long int	st_putnum(const char *str, long int i)
+{
+	long int	num;
+
+	num = *str - '0';
+	str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		num *= 10;
+		num += *str - '0';
+		str++;
+	}
+	return (num * i);
+}
+
+static long int	ft_atol(const char *str)
 {
 	int	i;
 
-	i = 0;
-	while (i < num)
+	i = 1;
+	while (*str != '\0' && ft_isspace(*str))
+		str++;
+	if (*str == '+')
+		str++;
+	else if (*str == '-')
 	{
-		pthread_mutex_destroy(&forks[i]);
-		i++;
+		i = -1;
+		str++;
 	}
+	if (*str >= '0' && *str <= '9')
+		return (st_putnum(str, i));
+	return (0);
 }
 
 static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
@@ -21,7 +55,7 @@ static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
 	{
 		if (pthread_mutex_init(&forks[i], NULL))
 		{	
-			st_clean_fork(forks, i);
+			clean_fork(forks, i);
 			return (0);
 		}
 		i++;
@@ -55,12 +89,11 @@ void	init_philo_info(t_info *info, char **argv)
 int	init_mutex(t_info *info, pthread_mutex_t *dying, pthread_mutex_t *writes,
 		pthread_mutex_t *forks )
 {
-	int				i;
+	int	i;
 
 	i = 0;
 	if (pthread_mutex_init(dying, NULL))
 		return (0);
-	
 	if (pthread_mutex_init(writes, NULL))
 	{	
 		pthread_mutex_destroy(dying);

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   simulation.c                                       :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/21 16:04:30 by dmonfrin      #+#    #+#                 */
+/*   Updated: 2022/11/21 16:04:32 by dmonfrin      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static void	create_thread(t_info *info)
+static void	st_create_thread(t_info *info)
 {
 	int	i;
 
@@ -14,7 +26,8 @@ static void	create_thread(t_info *info)
 		i++;
 	}
 }
-void	philo_join(t_info *infos)
+
+static void	st_philo_join(t_info *infos)
 {
 	int	i;
 
@@ -25,7 +38,8 @@ void	philo_join(t_info *infos)
 		i++;
 	}
 }
-void	set_dead(t_info *infos)
+
+static void	st_set_dead(t_info *infos)
 {
 	int	i;
 
@@ -36,34 +50,31 @@ void	set_dead(t_info *infos)
 		i++;
 	}
 }
-void	*monitoring(void *info)
-{
-	int	i;
-	t_info	*infos;
-	int	all_eat;
 
-	infos = info;
-	i = 0;
-	while ( 1 )
+static void	*st_monitoring(void *info)
+{
+	int		i;
+	int		all_eat;
+
+	while (ALIVE)
 	{
+		i = 0;
 		all_eat = 0;
-		pthread_mutex_lock(infos[0].dying);
-		while (i < infos[0].n_philo)
+		pthread_mutex_lock(((t_info *)info)[0].dying);
+		while (i < ((t_info *)info)[0].n_philo)
 		{
-			if (infos[i].schr_box == DEAD)
+			if (((t_info *)info)[i].schr_box == DEAD)
 			{	
-				set_dead(infos);
-				pthread_mutex_unlock(infos[0].dying);
+				st_set_dead(((t_info *)info));
+				pthread_mutex_unlock(((t_info *)info)[0].dying);
 				return (NULL);
 			}
-			if (infos[i].n_times_eat == 0)
+			if (((t_info *)info)[i++].n_times_eat == 0)
 				all_eat++;
-			i++;
 		}
-		pthread_mutex_unlock(infos[0].dying);
-		if (all_eat == infos[0].n_philo)
+		pthread_mutex_unlock(((t_info *)info)[0].dying);
+		if (all_eat == ((t_info *)info)[0].n_philo)
 			return (NULL);
-		i = 0;
 	}
 	return (NULL);
 }
@@ -72,9 +83,9 @@ void	start_simulation(t_info *info)
 {
 	pthread_t	monitor;
 
-	if(pthread_create(&monitor, NULL, &monitoring, info))
+	if (pthread_create(&monitor, NULL, &st_monitoring, info))
 		return ;
-	create_thread(info);
+	st_create_thread(info);
 	pthread_join(monitor, NULL);
-	philo_join(info);
+	st_philo_join(info);
 }

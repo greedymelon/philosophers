@@ -1,52 +1,22 @@
-#include "philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   utilitis.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/21 16:05:01 by dmonfrin      #+#    #+#                 */
+/*   Updated: 2022/11/21 16:05:05 by dmonfrin      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	ft_isspace(int c)
+#include "philo.h"
+#include <stdlib.h>
+
+int	ft_isspace(int c)
 {
 	return (c == ' ' || (c > 8 && c < 14));
 }
-
-static long int	putnum(const char *str, long int i)
-{
-	long int	num;
-
-	num = *str - '0';
-	str++;
-	while (*str >= '0' && *str <= '9')
-	{
-		num *= 10;
-		num += *str - '0';
-		str++;
-	}
-	return (num * i);
-}
-
-long int	ft_atol(const char *str)
-{
-	int	i;
-
-	i = 1;
-	while (*str != '\0' && ft_isspace(*str))
-		str++;
-	if (*str == '+')
-		str++;
-	else if (*str == '-')
-	{
-		i = -1;
-		str++;
-	}
-	if (*str >= '0' && *str <= '9')
-		return (putnum(str, i));
-	return (0);
-}
-
-
-int	ft_isalnum(int c)
-{
-	return (((c >= 'A' && c <= 'Z')
-			|| (c >= 'a' && c <= 'z')
-			|| (c >= '0' && c <= '9')));
-}
-
 
 static char	*copy(char *num, long int n, int i)
 {
@@ -116,8 +86,4 @@ size_t	ft_strlen(const char *s)
 	while (s[count] != '\0')
 		count++;
 	return (count);
-}
-int	ft_isdigit(int c)
-{
-	return (c >= '0' && c <= '9');
 }

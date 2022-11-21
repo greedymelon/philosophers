@@ -8,8 +8,9 @@ NAME = philo
 
 
 FILES = main.c \
-philo_rutine.c \
+philo_routine.c \
 print.c \
+time.c \
 utilitis.c \
 init.c \
 input_check.c \
