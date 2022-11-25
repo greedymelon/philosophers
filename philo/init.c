@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:01:51 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/23 17:30:00 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:27:34 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ int	init_philo_info(t_info *info, char **argv)
 
 	i = 0;
 	n_philo = ft_atol(argv[1]);
-	if (n_philo > 200)
-		return (1);
 	while (i < n_philo)
 	{
 		info[i].n_philo = n_philo;

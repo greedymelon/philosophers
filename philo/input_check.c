@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:02:09 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:02:19 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:29:04 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,11 @@ int	right_input(int argc, char **argv)
 			return (0);
 		i++;
 	}
+	if (ft_atol(argv[1]) > 200 || ft_atol(argv[1]) < 1)
+		return (0);
+	if (argv[5] && ft_atol(argv[5]) < 1)
+		return (0);
+	if (ft_atol(argv[2]) < 1 || ft_atol(argv[3]) < 0 || ft_atol(argv[4]) < 0)
+		return (0);
 	return (1);
 }
