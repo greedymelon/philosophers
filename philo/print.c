@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:04:12 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 12:51:35 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:49:14 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static t_bool	st_print_error(t_info *info)
 	info->schr_box = DEAD;
 	pthread_mutex_unlock(info->dying);
 	write(2, "ERROR TIME\n", 11);
-	ft_wait_ms(info->time_to_die * 4);
+	ft_wait_ms(info->time_to_die * 2);
 	pthread_mutex_unlock(info->write);
 	return (DEAD);
 }
@@ -63,7 +63,7 @@ t_bool	print_action(t_info *info, long int time, long int eat, int act_n)
 	{	
 		info->schr_box = DEAD;
 		pthread_mutex_unlock(info->dying);
-		ft_wait_ms(info->time_to_die * 4);
+		ft_wait_ms(info->time_to_die * 2);
 		pthread_mutex_unlock(info->write);
 		return (DEAD);
 	}

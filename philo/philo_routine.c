@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 18:57:38 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 12:43:08 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:50:25 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	*routine_odd(void *info)
 			return (NULL);
 		if (print_or_die(infos, time_msec() - infos->start, eat, THINK) == DEAD)
 			return (NULL);
+		if (infos->n_philo % 2 != 0)
+			sleep_act(infos, time_msec() - infos->start, eat, 1);
 	}
 	return (NULL);
 }

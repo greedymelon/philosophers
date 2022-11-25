@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/23 15:14:15 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 12:51:28 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:48:47 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	st_check_dead(t_info *infos)
 			pthread_mutex_unlock(infos[0].dying);
 			return (DEAD);
 		}
-		if (infos[i++].n_times_eat == 0)
+		if (infos[i].n_times_eat == 0)
 			all_eat++;
 		i++;
 	}
