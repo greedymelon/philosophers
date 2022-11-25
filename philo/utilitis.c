@@ -6,84 +6,67 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:05:01 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:05:05 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 12:51:28 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdlib.h>
+#include <unistd.h>
 
-int	ft_isspace(int c)
+static int	ft_isspace(int c)
 {
 	return (c == ' ' || (c > 8 && c < 14));
 }
 
-static char	*copy(char *num, long int n, int i)
+static long int	st_putnum(const char *str, long int i)
 {
-	if (n < 0)
+	long int	num;
+
+	num = *str - '0';
+	str++;
+	while (*str >= '0' && *str <= '9')
 	{
-		num[i + 1] = '\0';
-		num[0] = '-';
-		while (i > 0)
-		{
-			num[i] = '0' - n % 10;
-			n /= 10;
-			i--;
-		}
+		num *= 10;
+		num += *str - '0';
+		str++;
 	}
-	else
-	{
-		num[i] = '\0';
-		while (i > 0)
-		{
-			num[i - 1] = '0' + (n % 10);
-			n /= 10;
-			i--;
-		}
-	}
-	return (num);
+	return (num * i);
 }
 
-static int	ft_longlen(long int n)
+long int	ft_atol(const char *str)
 {
-	int	count;
+	int	i;
 
-	count = 0;
-	if (n == 0)
-		return (1);
-	while (n)
+	i = 1;
+	while (*str != '\0' && ft_isspace(*str))
+		str++;
+	if (*str == '+')
+		str++;
+	else if (*str == '-')
 	{
-		n /= 10;
-		count++;
+		i = -1;
+		str++;
 	}
-	return (count);
+	if (*str >= '0' && *str <= '9')
+		return (st_putnum(str, i));
+	return (0);
 }
 
-char	*ft_ltoa(long int n)
+void	ft_wait_ms(int time)
 {
-	char	*num;
-	int		longlen;
+	long int	start;
 
-	longlen = ft_longlen(n);
-	if (n < 0)
-		num = malloc((longlen + 2) * sizeof(char));
-	else
-		num = malloc((longlen + 1) * sizeof(char));
-	if (num == NULL)
-		return (NULL);
-	if (n != 0)
-		return (copy(num, n, longlen));
-	num[0] = '0';
-	num[1] = '\0';
-	return (num);
+	start = time_msec();
+	while (time > time_msec() - start)
+	{
+		usleep(250);
+	}
 }
 
-size_t	ft_strlen(const char *s)
+void	*unlock_fork(t_info *infos, int fork_fir, int fork_sec)
 {
-	size_t	count;
-
-	count = 0;
-	while (s[count] != '\0')
-		count++;
-	return (count);
+	pthread_mutex_unlock(&(infos->fork)[fork_fir]);
+	pthread_mutex_unlock(&(infos->fork)[fork_sec]);
+	return (NULL);
 }

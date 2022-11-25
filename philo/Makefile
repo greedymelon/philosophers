@@ -16,7 +16,8 @@ init.c \
 input_check.c \
 simulation.c \
 philo_action.c \
-clean_up.c
+clean_up.c	\
+monitoring.c
 
 
 OBJ = ${FILES:%.c=%.o}

@@ -6,45 +6,11 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:01:51 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 18:31:55 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/23 17:30:00 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static long int	st_putnum(const char *str, long int i)
-{
-	long int	num;
-
-	num = *str - '0';
-	str++;
-	while (*str >= '0' && *str <= '9')
-	{
-		num *= 10;
-		num += *str - '0';
-		str++;
-	}
-	return (num * i);
-}
-
-static long int	ft_atol(const char *str)
-{
-	int	i;
-
-	i = 1;
-	while (*str != '\0' && ft_isspace(*str))
-		str++;
-	if (*str == '+')
-		str++;
-	else if (*str == '-')
-	{
-		i = -1;
-		str++;
-	}
-	if (*str >= '0' && *str <= '9')
-		return (st_putnum(str, i));
-	return (0);
-}
 
 static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
 {
@@ -63,13 +29,15 @@ static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
 	return (1);
 }
 
-void	init_philo_info(t_info *info, char **argv)
+int	init_philo_info(t_info *info, char **argv)
 {
 	int				i;
 	int				n_philo;
 
 	i = 0;
 	n_philo = ft_atol(argv[1]);
+	if (n_philo > 200)
+		return (1);
 	while (i < n_philo)
 	{
 		info[i].n_philo = n_philo;
@@ -85,6 +53,7 @@ void	init_philo_info(t_info *info, char **argv)
 		info[i].theard_fail = 0;
 		i++;
 	}
+	return (0);
 }
 
 int	init_mutex(t_info *info, pthread_mutex_t *dying, pthread_mutex_t *writes,

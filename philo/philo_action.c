@@ -6,65 +6,52 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:03:11 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/21 18:06:32 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/25 13:22:08 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <unistd.h>
 
-t_bool	sleep_act(long int eat, long int time, t_info *infos)
+t_bool	sleep_act(t_info *infos, long int start, long int eat, long int time)
 {
-	long int	start;
+	long int	corr_time;
 
-	start = time_msec();
-	while (time > time_msec() - start)
+	while (time > time_msec() - (start + infos->start))
 	{
-		usleep(100);
-		pthread_mutex_lock(infos->dying);
-		if (infos->schr_box == DEAD)
-		{
-			pthread_mutex_unlock(infos->dying);
-			return (DEAD);
-		}
-		pthread_mutex_unlock(infos->dying);
-		if (infos->time_to_die <= time_msec() - infos->start - eat)
-			return (print_action(infos, DYING, eat));
+		usleep(250);
+		corr_time = time_msec() - infos->start;
+		if (infos->time_to_die <= corr_time - eat)
+			return (print_action(infos, corr_time, eat, DYING));
 	}
 	return (ALIVE);
 }
 
-void	*unlock_fork(t_info *infos, int fork_fir, int fork_sec)
+t_bool	print_or_die(t_info *infos, long int time, long int eat, int action)
 {
-	pthread_mutex_unlock(&(infos->fork)[fork_fir]);
-	pthread_mutex_unlock(&(infos->fork)[fork_sec]);
-	return (NULL);
-}
-
-t_bool	dead_or_print(t_info *infos, int action, long int eat)
-{
-	if (infos->time_to_die > time_msec() - infos->start - eat)
-		return (print_action(infos, action, eat));
+	if (infos->time_to_die > time - eat)
+		return (print_action(infos, time, eat, action));
 	else
-	{
-		print_action(infos, DYING, eat);
-		return (DEAD);
-	}
+		return (print_action(infos, time, eat, DYING));
 	return (ALIVE);
 }
 
 t_bool	fork_or_die(t_info *infos, long int eat, int fork_fir, int fork_sec)
 {
+	long int	time;
+
 	pthread_mutex_lock(&(infos->fork)[fork_fir]);
-	if (dead_or_print(infos, FORK, eat) == DEAD)
+	time = time_msec() - infos->start;
+	if (print_or_die(infos, time, eat, FORK) == DEAD)
 	{
 		pthread_mutex_unlock(&(infos->fork)[fork_fir]);
 		return (DEAD);
 	}
 	pthread_mutex_lock(&(infos->fork)[fork_sec]);
-	if (dead_or_print(infos, FORK, eat) == DEAD)
+	time = time_msec() - infos->start;
+	if (print_or_die(infos, time, eat, FORK) == DEAD)
 	{
-		unlock_fork(infos, fork_fir, fork_sec);
+		unlock_fork(infos, fork_sec, fork_fir);
 		return (DEAD);
 	}
 	return (ALIVE);
@@ -72,18 +59,32 @@ t_bool	fork_or_die(t_info *infos, long int eat, int fork_fir, int fork_sec)
 
 t_bool	eat_or_die(t_info *infos, long int *eat)
 {
-	int	n_eat;
+	int			n_eat;
+	long int	time;
 
-	if (dead_or_print(infos, EAT, *eat) == DEAD)
+	time = time_msec() - infos->start;
+	if (print_or_die(infos, time, *eat, EAT) == DEAD)
 		return (DEAD);
-	*eat = time_msec() - infos->start;
-	if (sleep_act(*eat, infos->time_to_eat, infos) == DEAD)
+	*eat = time;
+	if (sleep_act(infos, time, time, infos->time_to_eat) == DEAD)
 		return (DEAD);
 	pthread_mutex_lock(infos->dying);
 	infos->n_times_eat--;
 	n_eat = infos->n_times_eat;
 	pthread_mutex_unlock(infos->dying);
 	if (n_eat == 0)
+		return (DEAD);
+	return (ALIVE);
+}
+
+t_bool	sleep_or_die(t_info *infos, long int eat)
+{
+	long int	time;
+
+	time = time_msec() - infos->start;
+	if (print_or_die(infos, time, eat, SLEEP) == DEAD)
+		return (DEAD);
+	if (sleep_act(infos, time, eat, infos->time_to_sleep) == DEAD)
 		return (DEAD);
 	return (ALIVE);
 }
