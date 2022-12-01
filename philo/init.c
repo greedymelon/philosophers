@@ -6,11 +6,12 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:01:51 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 16:27:34 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/12/01 14:55:46 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <string.h>
 
 static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
 {
@@ -29,13 +30,14 @@ static int	st_forks_init(pthread_mutex_t *forks, int n_philo)
 	return (1);
 }
 
-int	init_philo_info(t_info *info, char **argv)
+int	init_philo_info(t_info *info, char **argv, int *fork_lock)
 {
 	int				i;
 	int				n_philo;
 
 	i = 0;
 	n_philo = ft_atol(argv[1]);
+	memset(fork_lock, 0, 200 * sizeof(int));
 	while (i < n_philo)
 	{
 		info[i].n_philo = n_philo;
@@ -43,6 +45,7 @@ int	init_philo_info(t_info *info, char **argv)
 		info[i].time_to_eat = ft_atol(argv[3]);
 		info[i].time_to_sleep = ft_atol(argv[4]);
 		info[i].schr_box = ALIVE;
+		info[i].fork_lock = fork_lock;
 		if (argv[5])
 			info[i].n_times_eat = ft_atol(argv[5]);
 		else

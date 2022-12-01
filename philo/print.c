@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:04:12 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 15:49:14 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/12/01 15:22:58 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ static void	st_print(t_info *info, long int time, int act_n)
 		action[act_n]);
 }
 
-t_bool	print_action(t_info *info, long int time, long int eat, int act_n)
+t_bool	print_action(t_info *info, long int time, int act_n)
 {
 	pthread_mutex_lock(info->write);
-	if (act_n == DEAD && time_msec() - info->start - eat
+	if (act_n == DYING && (time_msec() - info->start) - info->last_eat
 		> info->time_to_die + 10)
 		return (st_print_error(info));
 	pthread_mutex_lock(info->dying);
@@ -68,5 +68,14 @@ t_bool	print_action(t_info *info, long int time, long int eat, int act_n)
 		return (DEAD);
 	}
 	st_unlock_threads(info);
+	return (ALIVE);
+}
+
+t_bool	print_or_die(t_info *info, long int time, int action)
+{
+	if (info->time_to_die > time - info->last_eat)
+		return (print_action(info, time, action));
+	else
+		return (print_action(info, time, DYING));
 	return (ALIVE);
 }

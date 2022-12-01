@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:04:30 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 12:27:21 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/12/01 15:29:36 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,14 @@ static int	st_create_thread(t_info *info)
 			if (pthread_create(&(info[i]).philo, NULL, &routine_even, &info[i]))
 				break ;
 		}
-		else
+		else if (info[i].n_philo % 2 == 0)
 		{	
 			if (pthread_create(&(info[i]).philo, NULL, &routine_odd, &info[i]))
+				break ;
+		}
+		else
+		{	
+			if (pthread_create(&(info[i]).philo, NULL, &routine_oddo, &info[i]))
 				break ;
 		}
 		i++;

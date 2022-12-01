@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:05:01 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 12:51:28 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/12/01 15:22:50 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,19 @@ long int	ft_atol(const char *str)
 	return (0);
 }
 
-void	ft_wait_ms(int time)
+void	*unlock_fork(t_info *info, int fork_fir, int fork_sec)
 {
-	long int	start;
-
-	start = time_msec();
-	while (time > time_msec() - start)
-	{
-		usleep(250);
-	}
+	set_fork_status(info, fork_fir, fork_sec, AVAILABLE);
+	pthread_mutex_unlock(&(info->fork)[fork_fir]);
+	pthread_mutex_unlock(&(info->fork)[fork_sec]);
+	return (NULL);
 }
 
-void	*unlock_fork(t_info *infos, int fork_fir, int fork_sec)
+void	set_fork_status(t_info *info, int fork_1, int fork_2, int status)
 {
-	pthread_mutex_unlock(&(infos->fork)[fork_fir]);
-	pthread_mutex_unlock(&(infos->fork)[fork_sec]);
-	return (NULL);
+	pthread_mutex_lock(info->dying);
+	info->fork_lock[fork_1] = status;
+	if (fork_2 >= 0)
+		info->fork_lock[fork_2] = status;
+	pthread_mutex_unlock(info->dying);
 }

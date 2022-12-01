@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/23 15:14:15 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 15:48:47 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/11/30 17:16:43 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,10 @@ void	*monitoring(void *info)
 	while (ALIVE)
 	{
 		ft_wait_ms(infos->time_to_die / 2);
+		pthread_mutex_lock(infos->dying);
 		if (st_check_dead(infos) == DEAD)
 			return (NULL);
+		pthread_mutex_unlock(infos->dying);
 	}
 	return (NULL);
 }

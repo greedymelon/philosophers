@@ -6,7 +6,7 @@
 /*   By: dmonfrin <dmonfrin@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/21 16:02:47 by dmonfrin      #+#    #+#                 */
-/*   Updated: 2022/11/25 13:22:49 by dmonfrin      ########   odam.nl         */
+/*   Updated: 2022/12/01 15:17:40 by dmonfrin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,16 @@
 static void	*st_one_philo(void *info)
 {
 	t_info		*infos;
-	long int	eat;
 	long int	fork_time;
 
 	infos = info;
 	infos->start = time_msec();
-	eat = 0;
+	infos->last_eat = 0;
 	pthread_mutex_lock(infos->fork);
 	fork_time = time_msec() - infos->start;
-	print_or_die(infos, fork_time, eat, FORK);
-	sleep_act(info, fork_time, eat, infos->time_to_die);
-	print_or_die(infos, time_msec() - infos->start, eat, DYING);
+	print_or_die(infos, fork_time, FORK);
+	sleep_act(info, fork_time, infos->time_to_die);
+	print_or_die(infos, time_msec() - infos->start, DYING);
 	pthread_mutex_unlock(infos->fork);
 	return (NULL);
 }
@@ -45,10 +44,11 @@ int	main(int argc, char **argv)
 	pthread_mutex_t	writes;
 	pthread_mutex_t	dying;
 	pthread_mutex_t	forks[201];
+	int				fork_lock[201];
 
 	if (!right_input(argc, argv))
 		return (1);
-	if (init_philo_info(&info[0], argv))
+	if (init_philo_info(&info[0], argv, &fork_lock[0]))
 		return (2);
 	if (!init_mutex(&info[0], &dying, &writes, &forks[0]))
 		return (3);
