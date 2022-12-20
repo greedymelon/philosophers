@@ -46,6 +46,6 @@ example
 no philosophers should die;
 
 # *challenges*
-Data races: writing on a shared variable. In my case: the variable that keeps track of if a philosopher died, and the variable that keeps track of eating times.
-Deadlock: two threads waiting for the same resource, that it's never released. In my case: none;
-Synchronization: threads not synchronized well. In my case uneven N of philosophers, the last one was not able to eat in time.
+*Data races:* writing on a shared variable. In my case: the variable that keeps track of if a philosopher died, and the variable that keeps track of eating times.
+*Deadlock:* two threads waiting for the same resource, that it's never released. In my case: none.
+*Synchronization:* threads not synchronized well. In my case uneven N of philosophers, the last one was not able to eat in time.
