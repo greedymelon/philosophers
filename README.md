@@ -2,8 +2,8 @@
 School project 9
 
 ## **Description**
-This project aims to teach about: multithreading, data race, synchronization, and deadlock.
-Here are the rules:
+This project aims to teach about: multithreading, data race, synchronization, and deadlock.<br>
+Here are the rules:<br>
 
 - One or more philosophers sit at a round table.
 There is a large bowl of spaghetti in the middle of the table.
@@ -47,5 +47,5 @@ no philosophers should die;
 
 # **Challenges**
 **Data races:** writing on a shared variable. In my case: the variable that keeps track of if a philosopher died, and the variable that keeps track of eating times.<br>
-**Deadlock:** two threads waiting for the same resource, that it's never released. In my case: none.
+**Deadlock:** two threads waiting for the same resource, that it's never released. In my case: none. <br>
 **Synchronization:** threads not synchronized well. In my case uneven N of philosophers, the last one was not able to eat in time.
