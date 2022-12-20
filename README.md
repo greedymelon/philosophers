@@ -25,7 +25,7 @@ a philosopher dies of starvation.
 ## **How to run**
 clone this repository in your computer and open it
 ```
-git clone https://github.com/greedymelon/philosophers.git; cd philosophers
+git clone https://github.com/greedymelon/philosophers.git; cd philosophers/philo
 ```
 then ```make``` the program
 run
