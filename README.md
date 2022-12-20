@@ -27,7 +27,7 @@ clone this repository in your computer and open it
 ```
 git clone https://github.com/greedymelon/philosophers.git; cd philosophers
 ```
-then ```make`` the program
+then ```make``` the program
 run
 ```./philo``` with 4 or 5 parameters in this order:
 
