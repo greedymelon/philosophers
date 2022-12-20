@@ -29,14 +29,14 @@ git clone https://github.com/greedymelon/philosophers.git; cd philosophers
 ```
 then ```make`` the program
 run
-```./philo``` with 4 or 5 parameters:
+```./philo``` with 4 or 5 parameters in this order:
 
-- number_of_philosophers: The number of philosophers (max 200)
-- time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
+1. number_of_philosophers: The number of philosophers (max 200)
+2. time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
 milliseconds since the beginning of their last meal or the beginning of the simulation, they die.
-- time_to_eat (in milliseconds): The time it takes for a philosopher to eat.
-- time_to_sleep (in milliseconds): The time a philosopher will spend sleeping.
-- number_of_times_each_philosopher_must_eat (optional argument): If all
+3. time_to_eat (in milliseconds): The time it takes for a philosopher to eat.
+4. time_to_sleep (in milliseconds): The time a philosopher will spend sleeping.
+5. number_of_times_each_philosopher_must_eat (optional argument): If all
 philosophers have eaten at least number_of_times_each_philosopher_must_eat
 times, the simulation stops. If not specified, the simulation stops when a
 philosopher dies.
